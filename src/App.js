@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import Header from './components/Header';
+import ShortcutDocs from './components/ShortcutDocs';
+import Trainer from './components/Trainer';
+import Results from './components/Results';
+import CustomShortcuts from './components/CustomShortcuts';
 
 function App() {
+  const [view, setView] = useState('docs');
+  const [os, setOs] = useState(navigator.platform.includes('Mac') ? 'mac' : 'windows');
+
+  const toggleOs = () => {
+    setOs(prev => (prev === 'mac' ? 'windows' : 'mac'));
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header setView={setView} os={os} toggleOs={toggleOs} />
+      <p>Current OS Mode: {os} (<button onClick={toggleOs}>Toggle OS</button>)</p>
+      {view === 'docs' && <ShortcutDocs os={os} />}
+      {view === 'trainer' && <Trainer os={os} />}
+      {view === 'results' && <Results />}
+      {view === 'custom' && <CustomShortcuts os={os} />}
     </div>
   );
 }
