@@ -1,95 +1,218 @@
 import React, { useEffect, useState, useRef } from 'react';
-import shortcuts from '../data/shortcutsData';
+import vscodeData from '../data/vscodeShortcuts.json';
+import wordData from '../data/wordShortcuts.json';
 import { saveScore } from '../utils/storage';
+import { loadShortcuts } from '../utils/storage';
 
 function arraysEqualIgnoreOrder(a, b) {
-  if (a.length !== b.length) return false;
-  const sortedA = [...a].sort();
-  const sortedB = [...b].sort();
-  return sortedA.every((val, index) => val === sortedB[index]);
-}
-
-function normalizeKeyLabel(key) {
-  if (key === 'meta') return 'cmd';
-  if (key === 'control') return 'ctrl';
-  return key;
-}
-
-function Trainer({ os }) {
-  const allShortcuts = Object.values(shortcuts).flat().filter(Boolean);
-  const [index, setIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [feedback, setFeedback] = useState('');
-  const [done, setDone] = useState(false);
-  const keySet = useRef(new Set());
-  const processingRef = useRef(false);
-
-  const formatKeys = (keys) => {
-    if (os === 'mac') return keys.replace(/Ctrl/g, 'Cmd');
-    return keys.replace(/Cmd/g, 'Ctrl');
-  };
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (done || !allShortcuts[index] || processingRef.current) return;
-      e.preventDefault();
-      keySet.current.add(e.key.toLowerCase());
+    if (a.length !== b.length) return false;
+    const sortedA = [...a].sort();
+    const sortedB = [...b].sort();
+    return sortedA.every((val, index) => val === sortedB[index]);
+  }
+  
+  function normalizeKeyLabel(key, os) {
+    if (key === 'meta') return 'cmd';
+    if (key === 'control') return 'ctrl';
+    if (key === 'alt') return os === 'mac' ? 'option' : 'alt';
+    if (key === 'arrowup') return 'up';
+    if (key === 'arrowdown') return 'down';
+    if (key === 'arrowleft') return 'left';
+    if (key === 'arrowright') return 'right';
+    return key;
+  }
+  
+  function Trainer({ os }) {
+    const [difficulty, setDifficulty] = useState('easy');
+    const [source, setSource] = useState('vscode');
+    const [questions, setQuestions] = useState([]);
+    const [index, setIndex] = useState(0);
+    const [score, setScore] = useState(0);
+    const [feedback, setFeedback] = useState('');
+    const [done, setDone] = useState(false);
+    const [showHint, setShowHint] = useState(false);
+    const [incorrectList, setIncorrectList] = useState([]);
+    const keySet = useRef(new Set());
+    const processingRef = useRef(false);
+    const sequenceStage = useRef(null);
+    const sequenceTimeout = useRef(null);
+  
+    const formatKeys = (keys) => {
+      if (os === 'mac') return keys.replace(/Ctrl/g, 'Cmd').replace(/Alt/g, 'Option');
+      return keys; // no replacement for Windows/Linux
     };
-
-    const handleKeyUp = (e) => {
-      if (done || !allShortcuts[index] || processingRef.current) return;
-      e.preventDefault();
-      processingRef.current = true;
-
-      const expected = formatKeys(allShortcuts[index].keys).toLowerCase().split('+').map(k => k.trim());
-      const pressedRaw = Array.from(keySet.current);
-      const pressed = pressedRaw.map(normalizeKeyLabel);
+  
+    const loadData = () => {
+      const custom = Object.entries(loadShortcuts()).flatMap(([appName, items]) =>
+        items.map(item => ({ ...item, app: appName, keys: item.keys }))
+      );
+      const full = source === 'vscode' ? vscodeData.map(x => ({ ...x, app: 'VSCode' }))
+                  : source === 'word' ? wordData.map(x => ({ ...x, app: 'Word' }))
+                  : custom;
+      const shuffled = full.sort(() => 0.5 - Math.random());
+      const count = difficulty === 'easy' ? 5 : 10;
+      return shuffled.slice(0, count);
+    };
+  
+    const restart = () => {
+      setQuestions(loadData());
+      setIndex(0);
+      setScore(0);
+      setFeedback('');
+      setDone(false);
+      setShowHint(false);
+      setIncorrectList([]);
       keySet.current.clear();
-
-      const correct = arraysEqualIgnoreOrder(pressed, expected);
-      const newScore = correct ? score + 1 : score;
-
-      setFeedback(correct ? '✅ Correct!' : `❌ Incorrect! You pressed: ${pressed.join('+')}`);
-      setScore(newScore);
-
-      if (index + 1 < allShortcuts.length) {
-        setTimeout(() => {
-          setIndex(prev => prev + 1);
-          setFeedback('');
-          processingRef.current = false;
-        }, 1000);
-      } else {
-        setTimeout(() => {
-          saveScore(newScore);
-          setDone(true);
-        }, 1000);
-      }
+      processingRef.current = false;
+      sequenceStage.current = null;
+      clearTimeout(sequenceTimeout.current);
     };
-
-    document.addEventListener('keydown', handleKeyDown, { capture: true });
-    document.addEventListener('keyup', handleKeyUp, { capture: true });
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown, { capture: true });
-      document.removeEventListener('keyup', handleKeyUp, { capture: true });
-    };
-  }, [index, score, os, done, allShortcuts]);
-
-  if (done) {
-    return <h2>Your score: {score}</h2>;
+  
+    useEffect(() => {
+      restart();
+    }, [difficulty, source]);
+  
+    useEffect(() => {
+      const handleKeyDown = (e) => {
+        if (done || !questions[index] || processingRef.current) return;
+        e.preventDefault();
+        keySet.current.add(e.key.toLowerCase());
+      };
+  
+      const handleKeyUp = (e) => {
+        if (done || !questions[index] || processingRef.current) return;
+        e.preventDefault();
+  
+        const raw = os === 'mac' ? questions[index].mac || questions[index].keys : questions[index].windows || questions[index].keys;
+        const parts = raw.toLowerCase().split(',').map(p => p.trim());
+  
+        if (parts.length === 2) {
+          const current = keySet.current;
+          const first = parts[0].split('+').map(k => k.trim());
+          const second = parts[1];
+  
+          if (!sequenceStage.current) {
+            const pressed = Array.from(current).map(k => normalizeKeyLabel(k, os));
+            if (arraysEqualIgnoreOrder(pressed, first)) {
+              sequenceStage.current = second;
+              sequenceTimeout.current = setTimeout(() => sequenceStage.current = null, 2000);
+            } else {
+              feedbackAndNext(false, pressed, raw);
+            }
+          } else {
+            const finalKey = normalizeKeyLabel(e.key.toLowerCase(), os);
+            feedbackAndNext(finalKey === sequenceStage.current, [finalKey], raw);
+            sequenceStage.current = null;
+            clearTimeout(sequenceTimeout.current);
+          }
+        } else {
+          processingRef.current = true;
+          const expected = raw.toLowerCase().split('+').map(k => k.trim());
+          const pressed = Array.from(keySet.current).map(k => normalizeKeyLabel(k, os));
+          feedbackAndNext(arraysEqualIgnoreOrder(pressed, expected), pressed, raw);
+        }
+        keySet.current.clear();
+      };
+  
+      const feedbackAndNext = (correct, pressed = [], expectedRaw = '') => {
+        const newScore = correct ? score + 1 : score;
+        if (!correct) setIncorrectList(prev => [...prev, questions[index]]);
+        setFeedback(
+          correct ? '✅ Correct!' : `❌ Incorrect! You pressed: ${pressed.join(' + ')} | Expected: ${formatKeys(expectedRaw)}`
+        );
+        setScore(newScore);
+  
+        if (index + 1 < questions.length) {
+          setTimeout(() => {
+            setIndex(prev => prev + 1);
+            setFeedback('');
+            setShowHint(false);
+            processingRef.current = false;
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            saveScore({
+              score: newScore,
+              difficulty,
+              source,
+              os,
+              timestamp: Date.now()
+            });
+            setDone(true);
+          }, 2000);
+        }
+      };
+  
+      document.addEventListener('keydown', handleKeyDown, { capture: true });
+      document.addEventListener('keyup', handleKeyUp, { capture: true });
+  
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown, { capture: true });
+        document.removeEventListener('keyup', handleKeyUp, { capture: true });
+      };
+    }, [index, score, os, done, questions]);
+  
+    if (done) {
+      return (
+        <div>
+          <h2>Your score: {score}/{questions.length}</h2>
+          {incorrectList.length > 0 && (
+            <div>
+              <h3>Incorrect Answers:</h3>
+              <ul>
+                {incorrectList.map((item, idx) => (
+                  <li key={idx}>
+                    <strong>{item.action}</strong> ({item.app || 'Custom'}): {formatKeys(os === 'mac' ? item.mac || item.keys : item.windows || item.keys)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <button onClick={restart}>Retry</button>
+        </div>
+      );
+    }
+  
+    if (!questions[index]) {
+      return <p>Loading questions...</p>;
+    }
+  
+    return (
+      <div>
+        <h2>Keyboard Shortcut Trainer</h2>
+  
+        <label>
+          Difficulty:
+          <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+            <option value="easy">Easy</option>
+            <option value="hard">Hard</option>
+          </select>
+        </label>
+  
+        <label>
+          App:
+          <select value={source} onChange={(e) => setSource(e.target.value)}>
+            <option value="vscode">VS Code</option>
+            <option value="word">Word</option>
+            <option value="custom">Custom</option>
+          </select>
+        </label>
+  
+        <h3>Question {index + 1} of {questions.length}</h3>
+        <p><strong>{questions[index].action}</strong> ({questions[index].app || 'Custom'})</p>
+  
+        {difficulty === 'easy' && (
+          <button onClick={() => setShowHint(true)}>Show Hint</button>
+        )}
+  
+        {showHint && (
+          <p><em>Hint: {formatKeys(os === 'mac' ? questions[index].mac || questions[index].keys : questions[index].windows || questions[index].keys)}</em></p>
+        )}
+  
+        <p>{feedback}</p>
+      </div>
+    );
   }
-
-  if (!allShortcuts[index]) {
-    return <p>Loading shortcut...</p>;
-  }
-
-  return (
-    <div tabIndex={0} style={{ outline: 'none' }}>
-      <h3>Press the keys for: {allShortcuts[index].action}</h3>
-      <p>(Hint: {formatKeys(allShortcuts[index].keys)})</p>
-      <p>{feedback}</p>
-    </div>
-  );
-}
-
-export default Trainer;
+  
+  export default Trainer;
+  

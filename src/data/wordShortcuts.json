@@ -1,0 +1,307 @@
+[
+  {
+    "action": "Open Word Document",
+    "windows": "Ctrl + O",
+    "mac": "Command + O"
+  },
+  {
+    "action": "Create New Document",
+    "windows": "Ctrl + N",
+    "mac": "Command + N"
+  },
+  {
+    "action": "Save Document",
+    "windows": "Ctrl + S",
+    "mac": "Command + S"
+  },
+  {
+    "action": "Close Document",
+    "windows": "Ctrl + W",
+    "mac": "Command + F4"
+  },
+  {
+    "action": "Cut Selection",
+    "windows": "Ctrl + X",
+    "mac": "Command + X"
+  },
+  {
+    "action": "Copy Selection",
+    "windows": "Ctrl + C",
+    "mac": "Command + C"
+  },
+  {
+    "action": "Paste",
+    "windows": "Ctrl + V",
+    "mac": "Command + V"
+  },
+  {
+    "action": "Select All",
+    "windows": "Ctrl + A",
+    "mac": "Command + A"
+  },
+  {
+    "action": "Bold Text",
+    "windows": "Ctrl + B",
+    "mac": "Command + B"
+  },
+  {
+    "action": "Italic Text",
+    "windows": "Ctrl + I",
+    "mac": "Command + I"
+  },
+  {
+    "action": "Underline Text",
+    "windows": "Ctrl + U",
+    "mac": "Command + U"
+  },
+  {
+    "action": "Decrease Font Size",
+    "windows": "Ctrl + [",
+    "mac": "Command + ["
+  },
+  {
+    "action": "Increase Font Size",
+    "windows": "Ctrl + ]",
+    "mac": "Command + ]"
+  },
+  {
+    "action": "Center Text",
+    "windows": "Ctrl + E",
+    "mac": "Command + E"
+  },
+  {
+    "action": "Left Align Text",
+    "windows": "Ctrl + L",
+    "mac": "Command + L"
+  },
+  {
+    "action": "Right Align Text",
+    "windows": "Ctrl + R",
+    "mac": "Command + R"
+  },
+  {
+    "action": "Undo",
+    "windows": "Ctrl + Z",
+    "mac": "Command + Z"
+  },
+  {
+    "action": "Redo",
+    "windows": "Ctrl + Y",
+    "mac": "Command + Y"
+  },
+  {
+    "action": "Zoom",
+    "windows": "Alt + W",
+    "mac": "Option + W"
+  },
+  {
+    "action": "Split Window",
+    "windows": "Ctrl + Alt + S",
+    "mac": "Command + Option + S"
+  },
+  {
+    "action": "Search Field",
+    "windows": "Alt + Q",
+    "mac": "Command + C"
+  },
+  {
+    "action": "Open File Tab",
+    "windows": "Alt + F",
+    "mac": "Option + F"
+  },
+  {
+    "action": "Open Home Tab",
+    "windows": "Alt + H",
+    "mac": "Command + V"
+  },
+  {
+    "action": "Open Insert Tab",
+    "windows": "Alt + N",
+    "mac": "Option + N"
+  },
+  {
+    "action": "Open Design Tab",
+    "windows": "Alt + G",
+    "mac": "Option + G"
+  },
+  {
+    "action": "Open Layout Tab",
+    "windows": "Alt + P",
+    "mac": "Option + P"
+  },
+  {
+    "action": "Open References Tab",
+    "windows": "Alt + S",
+    "mac": "Option + S"
+  },
+  {
+    "action": "Open Mailings Tab",
+    "windows": "Alt + M",
+    "mac": "Option + M"
+  },
+  {
+    "action": "Open Review Tab",
+    "windows": "Alt + R",
+    "mac": "Option + R"
+  },
+  {
+    "action": "Open View Tab",
+    "windows": "Alt + W",
+    "mac": "Option + W"
+  },
+  {
+    "action": "Move One Word Left",
+    "windows": "Ctrl + Left Arrow",
+    "mac": "Command + Left Arrow"
+  },
+  {
+    "action": "Move One Word Right",
+    "windows": "Ctrl + Right Arrow",
+    "mac": "Command + Right Arrow"
+  },
+  {
+    "action": "Move Up One Paragraph",
+    "windows": "Ctrl + Up Arrow",
+    "mac": "Command + Up Arrow"
+  },
+  {
+    "action": "Move Down One Paragraph",
+    "windows": "Ctrl + Down Arrow",
+    "mac": "Command + Down Arrow"
+  },
+  {
+    "action": "Go to End of Line",
+    "windows": "End",
+    "mac": "End"
+  },
+  {
+    "action": "Go to Beginning of Line",
+    "windows": "Home",
+    "mac": "Home"
+  },
+  {
+    "action": "Go to Document Top",
+    "windows": "Ctrl + Home",
+    "mac": "Command + Home"
+  },
+  {
+    "action": "Go to Document Bottom",
+    "windows": "Ctrl + End",
+    "mac": "Command + End"
+  },
+  {
+    "action": "Show Navigation Pane",
+    "windows": "Ctrl + F",
+    "mac": "Command + F"
+  },
+  {
+    "action": "Go To Dialog",
+    "windows": "Ctrl + G",
+    "mac": "Command + Option + G"
+  },
+  {
+    "action": "Align Paragraph Justify",
+    "windows": "Ctrl + J",
+    "mac": "Command + J"
+  },
+  {
+    "action": "Indent Paragraph",
+    "windows": "Ctrl + M",
+    "mac": "Command + Shift + M"
+  },
+  {
+    "action": "Outdent Paragraph",
+    "windows": "Ctrl + Shift + M",
+    "mac": "Command + Shift + M"
+  },
+  {
+    "action": "Hanging Indent",
+    "windows": "Ctrl + T",
+    "mac": "Command + T"
+  },
+  {
+    "action": "Remove Hanging Indent",
+    "windows": "Ctrl + Shift + T",
+    "mac": "Command + Shift + T"
+  },
+  {
+    "action": "Remove Paragraph Formatting",
+    "windows": "Ctrl + Q",
+    "mac": "Command + Q"
+  },
+  {
+    "action": "Single Spacing",
+    "windows": "Ctrl + 1",
+    "mac": "Command + 1"
+  },
+  {
+    "action": "Double Spacing",
+    "windows": "Ctrl + 2",
+    "mac": "Command + 2"
+  },
+  {
+    "action": "1.5 Line Spacing",
+    "windows": "Ctrl + 5",
+    "mac": "Command + 5"
+  },
+  {
+    "action": "Normal Style",
+    "windows": "Ctrl + Shift + N",
+    "mac": "Command + Shift + N"
+  },
+  {
+    "action": "Apply Heading 2",
+    "windows": "Ctrl + Alt + 2",
+    "mac": "Command + Option + 2"
+  },
+  {
+    "action": "Change Case",
+    "windows": "Shift + F3",
+    "mac": "Shift + F3"
+  },
+  {
+    "action": "All Caps",
+    "windows": "Ctrl + Shift + A",
+    "mac": "Command + Shift + A"
+  },
+  {
+    "action": "Hide Text",
+    "windows": "Ctrl + Shift + H",
+    "mac": "Command + Shift + H"
+  },
+  {
+    "action": "Small Caps",
+    "windows": "Ctrl + Shift + K",
+    "mac": "Command + Shift + K"
+  },
+  {
+    "action": "Subscript",
+    "windows": "Ctrl + =",
+    "mac": "Command + ="
+  },
+  {
+    "action": "Superscript",
+    "windows": "Ctrl + Shift + +",
+    "mac": "Command + Shift + +"
+  },
+  {
+    "action": "Clear Formatting",
+    "windows": "Ctrl + Spacebar",
+    "mac": "Command + Spacebar"
+  },
+  {
+    "action": "Symbol Font",
+    "windows": "Ctrl + Shift + Q",
+    "mac": "Command + Shift + Q"
+  },
+  {
+    "action": "Insert Paragraph in Table",
+    "windows": "Enter",
+    "mac": "Enter"
+  },
+  {
+    "action": "Insert Tab in Table",
+    "windows": "Ctrl + Tab",
+    "mac": "Command + Tab"
+  }
+]

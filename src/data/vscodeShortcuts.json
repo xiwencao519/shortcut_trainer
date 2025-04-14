@@ -1,0 +1,223 @@
+[
+  {
+    "action": "Open Command Palette",
+    "windows": "Ctrl + Shift + P",
+    "mac": "Cmd + Shift + P"
+  },
+  {
+    "action": "Open Settings",
+    "windows": "Ctrl + ,",
+    "mac": "Cmd + ,"
+  },
+  {
+    "action": "Open Terminal",
+    "windows": "Ctrl + `",
+    "mac": "Ctrl + `"
+  },
+  {
+    "action": "New Window",
+    "windows": "Ctrl + Shift + N",
+    "mac": "Cmd + Shift + N"
+  },
+  {
+    "action": "Close Window",
+    "windows": "Ctrl + Shift + W",
+    "mac": "Cmd + Shift + W"
+  },
+  {
+    "action": "Save File",
+    "windows": "Ctrl + S",
+    "mac": "Cmd + S"
+  },
+  {
+    "action": "Save All",
+    "windows": "Ctrl + K S",
+    "mac": "Cmd + Option + S"
+  },
+  {
+    "action": "Quick Open",
+    "windows": "Ctrl + P",
+    "mac": "Cmd + P"
+  },
+  {
+    "action": "Keyboard Shortcuts",
+    "windows": "Ctrl + K",
+    "mac": "Cmd + K"
+  },
+  {
+    "action": "New File",
+    "windows": "Ctrl + N",
+    "mac": "Cmd + N"
+  },
+  {
+    "action": "Open File",
+    "windows": "Ctrl + O",
+    "mac": "Cmd + O"
+  },
+  {
+    "action": "Save As",
+    "windows": "Ctrl + Shift + S",
+    "mac": "Cmd + Shift + S"
+  },
+ 
+  {
+    "action": "Reopen Closed File",
+    "windows": "Ctrl + Shift + T",
+    "mac": "Cmd + Shift + T"
+  },
+  {
+    "action": "Open Folder",
+    "windows": "Ctrl + K O",
+    "mac": "Cmd + K O"
+  },
+  {
+    "action": "Next File",
+    "windows": "Ctrl + Tab",
+    "mac": "Cmd + Tab"
+  },
+  {
+    "action": "Previous File",
+    "windows": "Ctrl + Shift + Tab",
+    "mac": "Cmd + Shift + Tab"
+  },
+  {
+    "action": "Undo",
+    "windows": "Ctrl + Z",
+    "mac": "Cmd + Z"
+  },
+  {
+    "action": "Redo",
+    "windows": "Ctrl + Y",
+    "mac": "Cmd + Y"
+  },
+  {
+    "action": "Cut",
+    "windows": "Ctrl + X",
+    "mac": "Cmd + X"
+  },
+  {
+    "action": "Copy",
+    "windows": "Ctrl + C",
+    "mac": "Cmd + C"
+  },
+  {
+    "action": "Paste",
+    "windows": "Ctrl + V",
+    "mac": "Cmd + V"
+  },
+  {
+    "action": "Find",
+    "windows": "Ctrl + F",
+    "mac": "Cmd + F"
+  },
+  {
+    "action": "Replace",
+    "windows": "Ctrl + H",
+    "mac": "Cmd + H"
+  },
+  {
+    "action": "Select All",
+    "windows": "Ctrl + A",
+    "mac": "Cmd + A"
+  },
+  {
+    "action": "Format Code",
+    "windows": "Shift + Alt + F",
+    "mac": "Shift + Option + F"
+  },
+  {
+    "action": "Toggle Line Comment",
+    "windows": "Ctrl + /",
+    "mac": "Cmd + /"
+  },
+  {
+    "action": "Multi-line Comment",
+    "windows": "Shift + Alt + A",
+    "mac": "Shift + Option + A"
+  },
+  {
+    "action": "Delete Line",
+    "windows": "Ctrl + Shift + K",
+    "mac": "Cmd + Shift + K"
+  },
+  {
+    "action": "Move Line Up",
+    "windows": "Alt + Up",
+    "mac": "Option + Up"
+  },
+  {
+    "action": "Move Line Down",
+    "windows": "Alt + Down",
+    "mac": "Option + Down"
+  },
+  {
+    "action": "Duplicate Line",
+    "windows": "Shift + Alt + Down",
+    "mac": "Shift + Option + Down"
+  },
+  {
+    "action": "Insert Line Below",
+    "windows": "Ctrl + Enter",
+    "mac": "Cmd + Enter"
+  },
+  {
+    "action": "Insert Line Above",
+    "windows": "Ctrl + Shift + Enter",
+    "mac": "Cmd + Shift + Enter"
+  },
+  {
+    "action": "Go to Line",
+    "windows": "Ctrl + G",
+    "mac": "Cmd + G"
+  },
+  {
+    "action": "Toggle Terminal",
+    "windows": "Ctrl + `",
+    "mac": "Ctrl + `"
+  },
+  {
+    "action": "Find in Files",
+    "windows": "Ctrl + Shift + F",
+    "mac": "Cmd + Shift + F"
+  },
+  {
+    "action": "Start Debugging",
+    "windows": "F5",
+    "mac": "F5"
+  },
+  {
+    "action": "Stop Debugging",
+    "windows": "Shift + F5",
+    "mac": "Shift + F5"
+  },
+  {
+    "action": "Step Over",
+    "windows": "F10",
+    "mac": "F10"
+  },
+  {
+    "action": "Step Into",
+    "windows": "F11",
+    "mac": "F11"
+  },
+  {
+    "action": "Toggle Sidebar",
+    "windows": "Ctrl + B",
+    "mac": "Cmd + B"
+  },
+  {
+    "action": "Show Extensions",
+    "windows": "Ctrl + Shift + X",
+    "mac": "Cmd + Shift + X"
+  },
+  {
+    "action": "Zen Mode",
+    "windows": "Ctrl + K",
+    "mac": "Cmd + K"
+  },
+  {
+    "action": "Markdown Preview",
+    "windows": "Ctrl + K",
+    "mac": "Cmd + K"
+  }
+]
