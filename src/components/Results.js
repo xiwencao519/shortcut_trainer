@@ -24,74 +24,80 @@ ChartJS.register(
 
 function Results() {
   const [scores, setScores] = useState([]);
-  const [average, setAverage] = useState(0);
-  const [showAll, setShowAll] = useState(false);
+  const [grouped, setGrouped] = useState({});
 
   useEffect(() => {
     const history = loadScores();
     setScores(history);
-    if (history.length > 0) {
-      const total = history.reduce((sum, s) => sum + s.score, 0);
-      setAverage((total / history.length).toFixed(2));
-    }
+
+    const groupedByApp = {};
+    history.forEach(entry => {
+      const app = entry.source || 'unknown';
+      const mode = entry.difficulty || 'unknown';
+
+      if (!groupedByApp[app]) groupedByApp[app] = {};
+      if (!groupedByApp[app][mode]) groupedByApp[app][mode] = [];
+      groupedByApp[app][mode].push(entry);
+    });
+    setGrouped(groupedByApp);
   }, []);
 
-  const visibleScores = showAll ? scores : scores.slice(-5);
+  const computeAverage = (entries) => {
+    if (entries.length === 0) return 0;
+    const total = entries.reduce((sum, e) => sum + e.score, 0);
+    return (total / entries.length).toFixed(2);
+  };
 
-  const chartData = {
-    labels: scores.map((s, i) => `#${i + 1}`),
-    datasets: [
-      {
-        label: 'Score',
-        data: scores.map(s => s.score),
-        borderColor: 'rgb(75, 192, 192)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        tension: 0.3
-      }
-    ]
+  const getChartData = (entries) => {
+    return {
+      labels: entries.map((_, i) => `#${i + 1}`),
+      datasets: [
+        {
+          label: 'Score',
+          data: entries.map(e => e.score),
+          borderColor: 'rgb(54, 162, 235)',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          tension: 0.3
+        }
+      ]
+    };
   };
 
   return (
     <div>
-      <h2>Training History</h2>
-
-      {scores.length === 0 ? (
-        <p>No score history available yet.</p>
+      <h2>Training History (Grouped by App & Mode)</h2>
+      {Object.entries(grouped).length === 0 ? (
+        <p>No history available.</p>
       ) : (
-        <>
-          <p><strong>Average Score:</strong> {average}</p>
-
-          <Line data={chartData} />
-
-          <table border="1" cellPadding="8" style={{ marginTop: '1em' }}>
-            <thead>
-              <tr>
-                <th>Time</th>
-                <th>Score</th>
-                <th>App</th>
-                <th>Mode</th>
-                <th>OS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {visibleScores.map((entry, i) => (
-                <tr key={i}>
-                  <td>{new Date(entry.timestamp).toLocaleString()}</td>
-                  <td>{entry.score}</td>
-                  <td>{entry.source}</td>
-                  <td>{entry.difficulty}</td>
-                  <td>{entry.os}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {scores.length > 5 && (
-            <button onClick={() => setShowAll(!showAll)}>
-              {showAll ? 'Show Less' : 'Show More'}
-            </button>
-          )}
-        </>
+        Object.entries(grouped).map(([app, modes], appIdx) => (
+          <div key={appIdx} style={{ marginBottom: '3em' }}>
+            <h3>App: {app}</h3>
+            {Object.entries(modes).map(([mode, entries], modeIdx) => (
+              <div key={modeIdx} style={{ marginBottom: '2em' }}>
+                <h4>Mode: {mode} | Average Score: {computeAverage(entries)}</h4>
+                <Line data={getChartData(entries)} style={{ maxWidth: '600px', marginBottom: '1em' }} />
+                <table border="1" cellPadding="8">
+                  <thead>
+                    <tr>
+                      <th>Time</th>
+                      <th>Score</th>
+                      <th>OS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {entries.map((entry, i) => (
+                      <tr key={i}>
+                        <td>{entry.timestamp ? new Date(entry.timestamp).toLocaleString() : 'Invalid Date'}</td>
+                        <td>{entry.score ?? '-'}</td>
+                        <td>{entry.os ?? '-'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ))}
+          </div>
+        ))
       )}
     </div>
   );
