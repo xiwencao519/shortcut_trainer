@@ -38,8 +38,8 @@ function App() {
         >
           <h1 className="welcome-title">Welcome to Shortcut Trainer</h1>
           <p className="welcome-desc">
-            Master your productivity with keyboard shortcuts!<br />
-            Practice, customize, and track your performance.
+            Improve your productivity with keyboard shortcuts!<br />
+            Practice and track your performance.
           </p>
           <motion.button
             onClick={() => setView('docs')}
