@@ -62,7 +62,7 @@ function Trainer({ os }) {
     );
     const full = source === 'vscode' ? vscodeData.map(x => ({ ...x, app: 'VSCode' }))
       : source === 'word' ? wordData.map(x => ({ ...x, app: 'Word' }))
-      : custom;
+        : custom;
     const shuffled = full.sort(() => 0.5 - Math.random());
     const count = difficulty === 'easy' ? 5 : 10;
     return shuffled.slice(0, count);
@@ -112,68 +112,68 @@ function Trainer({ os }) {
     }
   };
 
-    const feedbackAndNext = (correct, pressed = [], expectedNormalized = []) => {
-      clearInterval(timer.current);
-      const newScore = correct ? score + 1 : score;
-      if (!correct) setIncorrectList(prev => [...prev, questions[index]]);
-      const toTitleCase = str => str.charAt(0).toUpperCase() + str.slice(1);
-      const formatDisplay = (arr) => arr.map(toTitleCase).join(' + ');
-      setFeedback(
-        correct
-          ? '✅ Correct!'
-          : `❌ Incorrect! You pressed: ${formatDisplay(pressed)} | Expected: ${formatDisplay(expectedNormalized)}`
-      );
-      setScore(newScore);
-      setShowNext(true);
-    };
+  const feedbackAndNext = (correct, pressed = [], expectedNormalized = []) => {
+    clearInterval(timer.current);
+    const newScore = correct ? score + 1 : score;
+    if (!correct) setIncorrectList(prev => [...prev, questions[index]]);
+    const toTitleCase = str => str.charAt(0).toUpperCase() + str.slice(1);
+    const formatDisplay = (arr) => arr.map(toTitleCase).join(' + ');
+    setFeedback(
+      correct
+        ? '✅ Correct!'
+        : `❌ Incorrect! You pressed: ${formatDisplay(pressed)} | Expected: ${formatDisplay(expectedNormalized)}`
+    );
+    setScore(newScore);
+    setShowNext(true);
+  };
   useEffect(() => {
     restart();
   }, [difficulty, source]);
 
   useEffect(() => {
-            const handleKeyDown = (e) => {
-            if (done || !questions[index] || processingRef.current || showNext) return;
-            e.preventDefault();
-            keySet.current.add(e.code.toLowerCase());
-        };
+    const handleKeyDown = (e) => {
+      if (done || !questions[index] || processingRef.current || showNext) return;
+      e.preventDefault();
+      keySet.current.add(e.code.toLowerCase());
+    };
 
-        const handleKeyUp = (e) => {
-            if (done || !questions[index] || processingRef.current || showNext) return;
-            e.preventDefault();
+    const handleKeyUp = (e) => {
+      if (done || !questions[index] || processingRef.current || showNext) return;
+      e.preventDefault();
 
-            const raw = os === 'mac' ? questions[index].mac || questions[index].keys : questions[index].windows || questions[index].keys;
-            const parts = raw.toLowerCase().split(',').map(p => p.trim());
+      const raw = os === 'mac' ? questions[index].mac || questions[index].keys : questions[index].windows || questions[index].keys;
+      const parts = raw.toLowerCase().split(',').map(p => p.trim());
 
-            if (parts.length === 2) {
-                const current = keySet.current;
-                const first = parts[0].split('+').map(k => k.trim());
-                const second = parts[1];
+      if (parts.length === 2) {
+        const current = keySet.current;
+        const first = parts[0].split('+').map(k => k.trim());
+        const second = parts[1];
 
-                if (!sequenceStage.current) {
-                    const pressed = Array.from(current).map(k => normalizeKeyLabel(k, os));
-                    if (arraysEqualIgnoreOrder(pressed, first)) {
-                        sequenceStage.current = second;
-                        sequenceTimeout.current = setTimeout(() => sequenceStage.current = null, 2000);
-                    } else {
-                        feedbackAndNext(false, pressed, raw);
-                    }
-                } else {
-                    const finalKey = normalizeKeyLabel(e.key.toLowerCase(), os);
-                    feedbackAndNext(finalKey === sequenceStage.current, [finalKey], raw);
-                    sequenceStage.current = null;
-                    clearTimeout(sequenceTimeout.current);
-                }
-            } else {
-                processingRef.current = true;
-                const expected = raw.toLowerCase().split('+').map(k => normalizeKeyLabel(k.trim(), os));
-                const pressed = Array.from(keySet.current).map(k => normalizeKeyLabel(k, os));
-                feedbackAndNext(arraysEqualIgnoreOrder(pressed, expected), pressed, expected);
-            }
-            keySet.current.clear();
-        };
+        if (!sequenceStage.current) {
+          const pressed = Array.from(current).map(k => normalizeKeyLabel(k, os));
+          if (arraysEqualIgnoreOrder(pressed, first)) {
+            sequenceStage.current = second;
+            sequenceTimeout.current = setTimeout(() => sequenceStage.current = null, 2000);
+          } else {
+            feedbackAndNext(false, pressed, raw);
+          }
+        } else {
+          const finalKey = normalizeKeyLabel(e.key.toLowerCase(), os);
+          feedbackAndNext(finalKey === sequenceStage.current, [finalKey], raw);
+          sequenceStage.current = null;
+          clearTimeout(sequenceTimeout.current);
+        }
+      } else {
+        processingRef.current = true;
+        const expected = raw.toLowerCase().split('+').map(k => normalizeKeyLabel(k.trim(), os));
+        const pressed = Array.from(keySet.current).map(k => normalizeKeyLabel(k, os));
+        feedbackAndNext(arraysEqualIgnoreOrder(pressed, expected), pressed, expected);
+      }
+      keySet.current.clear();
+    };
 
 
-   
+
 
     document.addEventListener('keydown', handleKeyDown, { capture: true });
     document.addEventListener('keyup', handleKeyUp, { capture: true });

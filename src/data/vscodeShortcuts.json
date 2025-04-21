@@ -192,11 +192,6 @@
     "mac": "F10"
   },
   {
-    "action": "Step Into",
-    "windows": "F11",
-    "mac": "F11"
-  },
-  {
     "action": "Toggle Sidebar",
     "windows": "Ctrl + B",
     "mac": "Cmd + B"
