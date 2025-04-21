@@ -204,3 +204,43 @@ select:focus {
   margin-bottom: 1.5rem;
   letter-spacing: -0.5px; 
 }
+
+
+
+
+.custom-shortcut-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.custom-shortcut-input {
+  width: 90%;
+  max-width: 350px;  /* slightly wider inputs */
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.custom-shortcut-input.active {
+  background-color: #e0f7fa;
+}
+
+.custom-shortcut-button {
+  width: 90%;
+  max-width: 350px;
+  padding: 0.6rem;
+  border-radius: 8px;
+  background-color: #2f855a;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.custom-shortcut-button:hover {
+  background-color: #336752;
+}

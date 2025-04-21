@@ -65,11 +65,7 @@
     "windows": "Ctrl + Shift + T",
     "mac": "Cmd + Shift + T"
   },
-  {
-    "action": "Open Folder",
-    "windows": "Ctrl + K O",
-    "mac": "Cmd + K O"
-  },
+ 
   {
     "action": "Next File",
     "windows": "Ctrl + Tab",
@@ -211,13 +207,18 @@
     "mac": "Cmd + Shift + X"
   },
   {
-    "action": "Zen Mode",
-    "windows": "Ctrl + K",
-    "mac": "Cmd + K"
+    "action": "Show Source Control",
+    "windows": "Ctrl + Shift + G",
+    "mac": "Cmd + Shift + G"
   },
   {
-    "action": "Markdown Preview",
-    "windows": "Ctrl + K",
-    "mac": "Cmd + K"
+    "action": "Show Search",
+    "windows": "Ctrl + Shift + E",
+    "mac": "Cmd + Shift + E"
+  },
+  {
+    "action": "Show Debug",
+    "windows": "Ctrl + Shift + D",
+    "mac": "Cmd + Shift + D"
   }
 ]

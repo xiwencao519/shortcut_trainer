@@ -25,6 +25,7 @@ ChartJS.register(
 function Results() {
   const [scores, setScores] = useState([]);
   const [grouped, setGrouped] = useState({});
+  const [showAll, setShowAll] = useState({});
 
   useEffect(() => {
     const history = loadScores();
@@ -63,39 +64,54 @@ function Results() {
     };
   };
 
+  const toggleShow = (app, mode) => {
+    const key = `${app}_${mode}`;
+    setShowAll(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
   return (
     <div>
-      <h2>Training History (Grouped by App & Mode)</h2>
+      <h2 className="section-heading">Training History</h2>
       {Object.entries(grouped).length === 0 ? (
         <p>No history available.</p>
       ) : (
         Object.entries(grouped).map(([app, modes], appIdx) => (
           <div key={appIdx} style={{ marginBottom: '3em' }}>
             <h3>App: {app}</h3>
-            {Object.entries(modes).map(([mode, entries], modeIdx) => (
-              <div key={modeIdx} style={{ marginBottom: '2em' }}>
-                <h4>Mode: {mode} | Average Score: {computeAverage(entries)}</h4>
-                <Line data={getChartData(entries)} style={{ maxWidth: '600px', marginBottom: '1em' }} />
-                <table border="1" cellPadding="8">
-                  <thead>
-                    <tr>
-                      <th>Time</th>
-                      <th>Score</th>
-                      <th>OS</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {entries.map((entry, i) => (
-                      <tr key={i}>
-                        <td>{entry.timestamp ? new Date(entry.timestamp).toLocaleString() : 'Invalid Date'}</td>
-                        <td>{entry.score ?? '-'}</td>
-                        <td>{entry.os ?? '-'}</td>
+            {Object.entries(modes).map(([mode, entries], modeIdx) => {
+              const key = `${app}_${mode}`;
+              const show = showAll[key];
+              const displayEntries = show ? entries : entries.slice(-5);
+              return (
+                <div key={modeIdx} style={{ marginBottom: '2em' }}>
+                  <h4>Mode: {mode} | Average Score: {computeAverage(entries)}</h4>
+                  <Line data={getChartData(entries)} style={{ maxWidth: '95%', marginBottom: '1em' }} />
+                  <table border="1" cellPadding="8">
+                    <thead>
+                      <tr>
+                        <th>Time</th>
+                        <th>Score</th>
+                        <th>OS</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ))}
+                    </thead>
+                    <tbody>
+                      {displayEntries.map((entry, i) => (
+                        <tr key={i}>
+                          <td>{entry.timestamp ? new Date(entry.timestamp).toLocaleString() : 'Invalid Date'}</td>
+                          <td>{entry.score ?? '-'}</td>
+                          <td>{entry.os ?? '-'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {entries.length > 5 && (
+                    <button onClick={() => toggleShow(app, mode)}>
+                      {show ? 'Show Less' : 'Show More'}
+                    </button>
+                  )}
+                </div>
+              );
+            })}
           </div>
         ))
       )}

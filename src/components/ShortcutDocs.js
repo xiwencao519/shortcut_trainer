@@ -15,8 +15,7 @@ function ShortcutDocs({ os, app, setApp }) {
   const dataToShow = showAll ? data : data.slice(0, 10);
 
   const formatKeys = (keys) => {
-    if (os === 'mac') return keys.replace(/Ctrl/g, 'Cmd').replace(/Alt/g, 'Option');
-    return keys.replace(/Cmd/g, 'Ctrl').replace(/Option/g, 'Alt');
+    return keys;
   };
 
   return (

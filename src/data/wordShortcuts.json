@@ -151,44 +151,25 @@
   },
   {
     "action": "Move One Word Left",
-    "windows": "Ctrl + Left Arrow",
-    "mac": "Command + Left Arrow"
+    "windows": "Ctrl + Left",
+    "mac": "Command + Left"
   },
   {
     "action": "Move One Word Right",
-    "windows": "Ctrl + Right Arrow",
-    "mac": "Command + Right Arrow"
+    "windows": "Ctrl + Right",
+    "mac": "Command + Right"
   },
   {
     "action": "Move Up One Paragraph",
-    "windows": "Ctrl + Up Arrow",
-    "mac": "Command + Up Arrow"
+    "windows": "Ctrl + Up",
+    "mac": "Command + Up"
   },
   {
     "action": "Move Down One Paragraph",
-    "windows": "Ctrl + Down Arrow",
-    "mac": "Command + Down Arrow"
+    "windows": "Ctrl + Down",
+    "mac": "Command + Down"
   },
-  {
-    "action": "Go to End of Line",
-    "windows": "End",
-    "mac": "End"
-  },
-  {
-    "action": "Go to Beginning of Line",
-    "windows": "Home",
-    "mac": "Home"
-  },
-  {
-    "action": "Go to Document Top",
-    "windows": "Ctrl + Home",
-    "mac": "Command + Home"
-  },
-  {
-    "action": "Go to Document Bottom",
-    "windows": "Ctrl + End",
-    "mac": "Command + End"
-  },
+  
   {
     "action": "Show Navigation Pane",
     "windows": "Ctrl + F",
@@ -283,11 +264,6 @@
     "action": "Superscript",
     "windows": "Ctrl + Shift + +",
     "mac": "Command + Shift + +"
-  },
-  {
-    "action": "Clear Formatting",
-    "windows": "Ctrl + Spacebar",
-    "mac": "Command + Spacebar"
   },
   {
     "action": "Symbol Font",
