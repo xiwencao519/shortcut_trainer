@@ -48,6 +48,8 @@ function Trainer({ os }) {
   const sequenceStage = useRef(null);
   const sequenceTimeout = useRef(null);
   const timer = useRef(null);
+  const indexRef = useRef(index);
+  const questionsRef = useRef(questions);
 
   const formatKeys = (keys) => {
     return keys;
@@ -55,6 +57,13 @@ function Trainer({ os }) {
   useEffect(() => {
     showNextRef.current = showNext;
   }, [showNext]);
+  useEffect(() => {
+    indexRef.current = index;
+  }, [index]);
+  
+  useEffect(() => {
+    questionsRef.current = questions;
+  }, [questions]);
 
   const loadData = () => {
     const custom = Object.entries(loadShortcuts()).flatMap(([appName, items]) =>
@@ -105,8 +114,14 @@ function Trainer({ os }) {
     }
   };
   const handleTimeout = () => {
-    if (!showNextRef.current && !done && questions[index]) {
-      const raw = os === 'mac' ? questions[index].mac || questions[index].keys : questions[index].windows || questions[index].keys;
+    const currentIndex = indexRef.current;
+    const currentQuestions = questionsRef.current;
+  
+    if (!showNextRef.current && !done && currentQuestions[currentIndex]) {
+      const raw = os === 'mac'
+        ? currentQuestions[currentIndex].mac || currentQuestions[currentIndex].keys
+        : currentQuestions[currentIndex].windows || currentQuestions[currentIndex].keys;
+  
       const expected = raw.toLowerCase().split('+').map(k => normalizeKeyLabel(k.trim(), os));
       feedbackAndNext(false, [], expected);
     }
