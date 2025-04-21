@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Header from './components/Header';
 import ShortcutDocs from './components/ShortcutDocs';
 import Trainer from './components/Trainer';
 import Results from './components/Results';
