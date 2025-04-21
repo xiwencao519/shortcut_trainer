@@ -135,7 +135,7 @@ function Trainer({ os }) {
     const formatDisplay = (arr) => arr.map(toTitleCase).join(' + ');
     setFeedback(
       correct
-        ? '✅ Correct!'
+        ? `✅ Correct! You pressed: ${formatDisplay(pressed)}`
         : `❌ Incorrect! You pressed: ${formatDisplay(pressed)} | Expected: ${formatDisplay(expectedNormalized)}`
     );
     setScore(newScore);
