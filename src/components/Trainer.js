@@ -38,8 +38,6 @@ function Trainer({ os }) {
   const [done, setDone] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [showNext, setShowNext] = useState(false);
-  const [incorrectList, setIncorrectList] = useState([]);
-  const [retryIncorrect, setRetryIncorrect] = useState(false);
   const [started, setStarted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(10);
   const showNextRef = useRef(false);
@@ -78,8 +76,7 @@ function Trainer({ os }) {
   };
 
   const restart = (fromIncorrect = false) => {
-    const data = fromIncorrect && incorrectList.length > 0 ? incorrectList : loadData();
-    setRetryIncorrect(fromIncorrect);
+    const data = loadData();
     setQuestions(data);
     setIndex(0);
     setScore(0);
@@ -88,7 +85,6 @@ function Trainer({ os }) {
     setShowHint(false);
     setShowNext(false);
     setStarted(false);
-    setIncorrectList([]);
     keySet.current.clear();
     processingRef.current = false;
     sequenceStage.current = null;
@@ -130,7 +126,6 @@ function Trainer({ os }) {
   const feedbackAndNext = (correct, pressed = [], expectedNormalized = []) => {
     clearInterval(timer.current);
     const newScore = correct ? score + 1 : score;
-    if (!correct) setIncorrectList(prev => [...prev, questions[index]]);
     const toTitleCase = str => str.charAt(0).toUpperCase() + str.slice(1);
     const formatDisplay = (arr) => arr.map(toTitleCase).join(' + ');
     setFeedback(
@@ -220,7 +215,6 @@ function Trainer({ os }) {
         }, 1000);
       }
     } else {
-      if (!retryIncorrect) {
         saveScore({
           score,
           difficulty,
@@ -228,7 +222,6 @@ function Trainer({ os }) {
           os,
           timestamp: Date.now()
         });
-      }
       setDone(true);
     }
   };
@@ -237,19 +230,6 @@ function Trainer({ os }) {
     return (
       <div>
         <h2>Your score: {score}/{questions.length}</h2>
-        {incorrectList.length > 0 && (
-          <div>
-            <h3>Incorrect Answers:</h3>
-            <ul>
-              {incorrectList.map((item, idx) => (
-                <li key={idx}>
-                  <strong>{item.action}</strong> ({item.app || 'Custom'}): {formatKeys(os === 'mac' ? item.mac || item.keys : item.windows || item.keys)}
-                </li>
-              ))}
-            </ul>
-            <button onClick={() => restart(true)}>Practice Incorrect Questions Again</button>
-          </div>
-        )}
         <button onClick={() => restart(false)}>Retry Full Test</button>
       </div>
     );
