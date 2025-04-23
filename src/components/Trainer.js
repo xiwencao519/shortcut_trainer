@@ -3,6 +3,13 @@ import vscodeData from '../data/vscodeShortcuts.json';
 import wordData from '../data/wordShortcuts.json';
 import { saveScore, loadShortcuts } from '../utils/storage';
 
+/**
+ * @function arraysEqualIgnoreOrder 
+ * Compares two arrays for equality regardless of element order.
+ * @param {Array} a - First array.
+ * @param {Array} b - Second array.
+ * @returns {boolean} True if arrays contain the same elements.
+ */
 function arraysEqualIgnoreOrder(a, b) {
   if (a.length !== b.length) return false;
   const sortedA = [...a].sort();
@@ -10,6 +17,13 @@ function arraysEqualIgnoreOrder(a, b) {
   return sortedA.every((val, index) => val === sortedB[index]);
 }
 
+/**
+ * @function normalizeKeyLabel 
+ * Normalizes keyboard event codes for future comparison.
+ * @param {string} code - Raw key string.
+ * @param {'mac' | 'windows'} os - Operating system.
+ * @returns {string} Normalized label.
+ */
 function normalizeKeyLabel(code, os) {
   if (code.startsWith('meta')) return 'cmd';
   if (code.startsWith('control')) return 'ctrl';
@@ -28,41 +42,48 @@ function normalizeKeyLabel(code, os) {
   return code.toLowerCase();
 }
 
-function Trainer({ os }) {
-  const [difficulty, setDifficulty] = useState('easy');
-  const [source, setSource] = useState('vscode');
-  const [questions, setQuestions] = useState([]);
-  const [index, setIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [feedback, setFeedback] = useState('');
-  const [done, setDone] = useState(false);
-  const [showHint, setShowHint] = useState(false);
-  const [showNext, setShowNext] = useState(false);
-  const [started, setStarted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(10);
-  const showNextRef = useRef(false);
-  const keySet = useRef(new Set());
-  const processingRef = useRef(false);
-  const sequenceStage = useRef(null);
-  const sequenceTimeout = useRef(null);
-  const timer = useRef(null);
-  const indexRef = useRef(index);
-  const questionsRef = useRef(questions);
 
-  const formatKeys = (keys) => {
-    return keys;
-  };
+/**
+ * @function Trainer Main function for practicing keyboard shortcuts for VS Code, Word, or customized shortcuts.
+ * Provides interactive feedback, hint options, and a time limit under "hard mode".
+ * @param {'mac' | 'windows'} props.os - Current operating system.
+ * @returns {JSX.Element} Rendered interactive training interface.
+ */
+function Trainer({ os }) {
+  const [difficulty, setDifficulty] = useState('easy'); //difficulty mode
+  const [source, setSource] = useState('vscode'); //source of shortcuts
+  const [questions, setQuestions] = useState([]); //questions to be asked
+  const [index, setIndex] = useState(0); //question index
+  const [score, setScore] = useState(0); //score
+  const [feedback, setFeedback] = useState('');//feedback message
+  const [done, setDone] = useState(false); //whether the test is done
+  const [showHint, setShowHint] = useState(false); //whether to show hint
+  const [showNext, setShowNext] = useState(false); //whether to show next question
+  const [started, setStarted] = useState(false); //whether to start the test
+  const [timeLeft, setTimeLeft] = useState(10); //time left for hard mode
+  const showNextRef = useRef(false); //reference to showNext
+  const keySet = useRef(new Set()); //set to store pressed keys
+  const processingRef = useRef(false); //reference to check if processing
+  const timer = useRef(null); //timer reference
+  const indexRef = useRef(index); //reference to index
+  const questionsRef = useRef(questions); //reference to questions
+
   useEffect(() => {
     showNextRef.current = showNext;
   }, [showNext]);
   useEffect(() => {
     indexRef.current = index;
   }, [index]);
-  
+
   useEffect(() => {
     questionsRef.current = questions;
   }, [questions]);
 
+  /**
+   * @function loadData 
+   * Loads and ramdomly select shortcut questions based on selected app and difficulty.
+   * @returns {Array} Array of selected shortcut questions.
+   */
   const loadData = () => {
     const custom = Object.entries(loadShortcuts()).flatMap(([appName, items]) =>
       items.map(item => ({ ...item, app: appName, keys: item.keys }))
@@ -75,6 +96,11 @@ function Trainer({ os }) {
     return shuffled.slice(0, count);
   };
 
+  /**
+   * @function restart 
+   * Resets the test state and reloads new question set.
+   * @param {boolean} fromIncorrect - Whether to restart from an incorrect answer.
+   */
   const restart = (fromIncorrect = false) => {
     const data = loadData();
     setQuestions(data);
@@ -87,12 +113,14 @@ function Trainer({ os }) {
     setStarted(false);
     keySet.current.clear();
     processingRef.current = false;
-    sequenceStage.current = null;
-    clearTimeout(sequenceTimeout.current);
     clearInterval(timer.current);
     setTimeLeft(10);
   };
 
+  /**
+   * @function startTest 
+   * Starts the test and sets up timer for hard mode.
+  */
   const startTest = () => {
     setStarted(true);
     if (difficulty === 'hard') {
@@ -109,20 +137,32 @@ function Trainer({ os }) {
       }, 1000);
     }
   };
+
+  /**
+   * @function handleTimeout 
+   * Handles the timeout event when time runs out.
+   */
   const handleTimeout = () => {
     const currentIndex = indexRef.current;
     const currentQuestions = questionsRef.current;
-  
+
     if (!showNextRef.current && !done && currentQuestions[currentIndex]) {
       const raw = os === 'mac'
         ? currentQuestions[currentIndex].mac || currentQuestions[currentIndex].keys
         : currentQuestions[currentIndex].windows || currentQuestions[currentIndex].keys;
-  
+
       const expected = raw.toLowerCase().split('+').map(k => normalizeKeyLabel(k.trim(), os));
       feedbackAndNext(false, [], expected);
     }
   };
 
+  /**
+   * @function feedbackAndNext 
+   * Updates feedback, score and prepares for the next question.
+   * @param {boolean} correct - Whether the user's input was correct.
+   * @param {Array} pressed - The keys pressed by the user.
+   * @param {Array} expectedNormalized - The expected keys for the current question.
+   */
   const feedbackAndNext = (correct, pressed = [], expectedNormalized = []) => {
     clearInterval(timer.current);
     const newScore = correct ? score + 1 : score;
@@ -136,54 +176,46 @@ function Trainer({ os }) {
     setScore(newScore);
     setShowNext(true);
   };
-  useEffect(() => {
-    restart();
-  }, [difficulty, source]);
 
   useEffect(() => {
+    restart();
+  }, [difficulty, source]);// Reload question set on difficulty or source change
+
+  /**
+   * Captures key combinations and compares with expected.
+   */
+  useEffect(() => {
+    /**
+      * @function handleKeyDown 
+      * Handles keydown events and captures pressed keys.
+      * @param {KeyboardEvent} e - The keyboard event.
+     */
     const handleKeyDown = (e) => {
       if (done || !questions[index] || processingRef.current || showNext) return;
       e.preventDefault();
       keySet.current.add(e.code.toLowerCase());
     };
 
+
+    /**
+      * @function handleKeyUp 
+      * Handles keyup events and checks if the pressed keys match the expected keys.
+      * @param {KeyboardEvent} e - The keyboard event.
+     */
     const handleKeyUp = (e) => {
       if (done || !questions[index] || processingRef.current || showNext) return;
       e.preventDefault();
+      const raw = os === 'mac'
+        ? questions[index].mac || questions[index].keys
+        : questions[index].windows || questions[index].keys;
 
-      const raw = os === 'mac' ? questions[index].mac || questions[index].keys : questions[index].windows || questions[index].keys;
-      const parts = raw.toLowerCase().split(',').map(p => p.trim());
+      const expected = raw.toLowerCase().split('+').map(k => normalizeKeyLabel(k.trim(), os));
+      const pressed = Array.from(keySet.current).map(k => normalizeKeyLabel(k, os));
 
-      if (parts.length === 2) {
-        const current = keySet.current;
-        const first = parts[0].split('+').map(k => k.trim());
-        const second = parts[1];
-
-        if (!sequenceStage.current) {
-          const pressed = Array.from(current).map(k => normalizeKeyLabel(k, os));
-          if (arraysEqualIgnoreOrder(pressed, first)) {
-            sequenceStage.current = second;
-            sequenceTimeout.current = setTimeout(() => sequenceStage.current = null, 2000);
-          } else {
-            feedbackAndNext(false, pressed, raw);
-          }
-        } else {
-          const finalKey = normalizeKeyLabel(e.key.toLowerCase(), os);
-          feedbackAndNext(finalKey === sequenceStage.current, [finalKey], raw);
-          sequenceStage.current = null;
-          clearTimeout(sequenceTimeout.current);
-        }
-      } else {
-        processingRef.current = true;
-        const expected = raw.toLowerCase().split('+').map(k => normalizeKeyLabel(k.trim(), os));
-        const pressed = Array.from(keySet.current).map(k => normalizeKeyLabel(k, os));
-        feedbackAndNext(arraysEqualIgnoreOrder(pressed, expected), pressed, expected);
-      }
+      processingRef.current = true;
+      feedbackAndNext(arraysEqualIgnoreOrder(pressed, expected), pressed, expected);
       keySet.current.clear();
     };
-
-
-
 
     document.addEventListener('keydown', handleKeyDown, { capture: true });
     document.addEventListener('keyup', handleKeyUp, { capture: true });
@@ -194,6 +226,10 @@ function Trainer({ os }) {
     };
   }, [index, score, os, done, questions, showNext, started]);
 
+  /**
+   * @function handleNextQuestion 
+   * Transit to the next question or end the game(save score).
+   */
   const handleNextQuestion = () => {
     if (index + 1 < questions.length) {
       setIndex(prev => prev + 1);
@@ -215,13 +251,13 @@ function Trainer({ os }) {
         }, 1000);
       }
     } else {
-        saveScore({
-          score,
-          difficulty,
-          source,
-          os,
-          timestamp: Date.now()
-        });
+      saveScore({
+        score,
+        difficulty,
+        source,
+        os,
+        timestamp: Date.now()
+      });
       setDone(true);
     }
   };
@@ -284,7 +320,7 @@ function Trainer({ os }) {
       )}
 
       {showHint && (
-        <p><em>Hint: {formatKeys(os === 'mac' ? questions[index].mac || questions[index].keys : questions[index].windows || questions[index].keys)}</em></p>
+        <p><em>Hint: {os === 'mac' ? questions[index].mac || questions[index].keys : questions[index].windows || questions[index].keys}</em></p>
       )}
 
       <p>{feedback}</p>

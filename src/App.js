@@ -7,15 +7,31 @@ import { motion } from 'framer-motion';
 import './components/Global.css';
 import './components/Welcome.css';
 
+/**
+ * @function App
+ * It controls the layout,handles navigation between views (welcome, docs, trainer, results, custom shortcuts),
+ * and manages application-level state such as selected operating system and app.
+ * It uses the `useState` hook to manage the current view, operating system, and selected app.
+ * @returns {JSX.Element} The rendered Shortcut Trainer app interface.
+ */
+
 function App() {
   const [view, setView] = useState('welcome');
   const [os, setOs] = useState(navigator.platform.includes('Mac') ? 'mac' : 'windows');
   const [app, setApp] = useState('vscode');
 
+
+  /**
+   * @function toggleOs Toggles the operating system between 'mac' and 'windows'.
+   */
   const toggleOs = () => {
     setOs(prev => (prev === 'mac' ? 'windows' : 'mac'));
   };
 
+
+  /**
+  * @function renderMain  Renders the appropriate main view component based on current state.
+  */
   const renderMain = () => (
     <div className="main-content">
       {view === 'docs' && <ShortcutDocs os={os} app={app} setApp={setApp} />}
@@ -25,6 +41,7 @@ function App() {
     </div>
   );
 
+  // Render the initial welcome screen when loading
   if (view === 'welcome') {
     return (
       <div className="welcome-wrapper">
@@ -53,6 +70,7 @@ function App() {
     );
   }
 
+  // Render the main app layout with navbar and selected view
   return (
     <div className="app-container">
       <nav className="navbar">

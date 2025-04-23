@@ -22,11 +22,18 @@ ChartJS.register(
   Legend
 );
 
+/**
+ * @function Results 
+ * Displays the training history of keyboard shortcuts, including scores and performance charts.
+ * @returns {JSX.Element} The rendered results.
+ */
 function Results() {
   const [scores, setScores] = useState([]);
   const [grouped, setGrouped] = useState({});
   const [showAll, setShowAll] = useState({});
 
+
+  //Loads scores from local storage and groups them by app and mode.
   useEffect(() => {
     const history = loadScores();
     setScores(history);
@@ -43,12 +50,24 @@ function Results() {
     setGrouped(groupedByApp);
   }, []);
 
+  /**
+   * @function computeAverage 
+   * Computes the average score
+   * @param {Array} entries - Array of score entries.
+   * @returns {string} Average score, 2 decimal places.
+   */
   const computeAverage = (entries) => {
     if (entries.length === 0) return 0;
     const total = entries.reduce((sum, e) => sum + e.score, 0);
     return (total / entries.length).toFixed(2);
   };
 
+  /**
+   * @function getChartData 
+   * Prepares data for the chart.
+   * @param {Array} entries - Array of score entries.
+   * @returns {Object} Chart data object.
+   */
   const getChartData = (entries) => {
     return {
       labels: entries.map((_, i) => `#${i + 1}`),
@@ -64,6 +83,12 @@ function Results() {
     };
   };
 
+  /**
+   * @function toggleShow 
+   * Toggles the visibility of all entries for a given app and mode.
+   * @param {string} app - The app name.
+   * @param {string} mode - The mode name.
+   */
   const toggleShow = (app, mode) => {
     const key = `${app}_${mode}`;
     setShowAll(prev => ({ ...prev, [key]: !prev[key] }));

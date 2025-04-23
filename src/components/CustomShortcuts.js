@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { loadShortcuts, saveShortcuts } from '../utils/storage';
 
+/**
+ * @function CustomShortcuts 
+ * Allow users to add custom keyboard shortcuts for different applications.
+ * @param {'mac'|'windows'} os - The current operating system.
+ * @returns {JSX.Element} The rendered interface.
+ */
 function CustomShortcuts({ os }) {
-  const [app, setApp] = useState('');
-  const [keys, setKeys] = useState('');
-  const [action, setAction] = useState('');
-  const [isListening, setIsListening] = useState(false);
-  const [combo, setCombo] = useState(new Set());
+  const [app, setApp] = useState(''); // The name of the app 
+  const [keys, setKeys] = useState(''); // The keyboard shortcut
+  const [action, setAction] = useState(''); // The action associated with the shortcut
+  const [isListening, setIsListening] = useState(false); // Whether the component is currently recording key input.
+  const [combo, setCombo] = useState(new Set()); //A Set to store combination of keys being pressed.
 
   useEffect(() => {
+    /**
+      * @function captureKeys 
+      * Captures key events and updates the keys state.
+      * @param {KeyboardEvent} e - The keyboard event.
+     */
     const captureKeys = (e) => {
       if (!isListening) return;
       e.preventDefault();
@@ -19,11 +30,14 @@ function CustomShortcuts({ os }) {
       if (e.altKey) updatedCombo.add('Alt');
       if (e.shiftKey) updatedCombo.add('Shift');
       if (e.key && !['Control', 'Shift', 'Alt', 'Meta'].includes(e.key)) updatedCombo.add(e.key);
-
       setCombo(updatedCombo);
       setKeys(Array.from(updatedCombo).join(' + '));
     };
 
+    /**
+     * @function clearCombo 
+     * Automatically stops listening shortly after key release andc Clears the key combination.
+     */
     const clearCombo = () => {
       if (isListening) {
         setTimeout(() => {
@@ -42,6 +56,10 @@ function CustomShortcuts({ os }) {
     };
   }, [os, isListening, combo]);
 
+  /**
+   * @function handleAdd 
+   * Adds a new custom shortcut to local storage. And reset the input fields.
+   */
   const handleAdd = () => {
     const current = loadShortcuts();
     if (!current[app]) current[app] = [];
