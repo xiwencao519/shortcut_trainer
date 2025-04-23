@@ -99,9 +99,8 @@ function Trainer({ os }) {
   /**
    * @function restart 
    * Resets the test state and reloads new question set.
-   * @param {boolean} fromIncorrect - Whether to restart from an incorrect answer.
    */
-  const restart = (fromIncorrect = false) => {
+  const restart = () => {
     const data = loadData();
     setQuestions(data);
     setIndex(0);
@@ -266,7 +265,7 @@ function Trainer({ os }) {
     return (
       <div>
         <h2>Your score: {score}/{questions.length}</h2>
-        <button onClick={() => restart(false)}>Retry Full Test</button>
+        <button onClick={() => restart()}>Retry Full Test</button>
       </div>
     );
   }

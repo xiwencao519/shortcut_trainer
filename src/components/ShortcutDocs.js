@@ -6,13 +6,12 @@ import { loadShortcuts } from '../utils/storage';
 
 /**
  * @function ShortcutDocs
- * A documentation viewer for keyboard shortcuts. Displays default and custom shortcuts
- * based on the selected application (VS Code or Word) and the current operating system.
- * @param {'mac'|'windows'} os - The current operating system context.
- * @param {'vscode'|'word'} app - The currently selected application.
+ * A documentation viewer for keyboard shortcuts. Displays default and custom shortcuts based on the selected application (VS Code or Word) and the current operating system.
+ * @param {'mac'|'windows'} os - The operating system.
+ * @param {'vscode'|'word'} app - The app.
  * @param {'vscode'|'word'} setApp - Update the current app name.
  * 
- * @returns {JSX.Element} The rendered shortcut documentation component.
+ * @returns {JSX.Element} The rendered interface.
  */
 function ShortcutDocs({ os, app, setApp }) {
   const [showAll, setShowAll] = useState(false); //Control whether all shortcuts or just the top 10 are shown.

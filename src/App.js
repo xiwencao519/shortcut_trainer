@@ -10,9 +10,8 @@ import './components/Welcome.css';
 /**
  * @function App
  * It controls the layout,handles navigation between views (welcome, docs, trainer, results, custom shortcuts),
- * and manages application-level state such as selected operating system and app.
- * It uses the `useState` hook to manage the current view, operating system, and selected app.
- * @returns {JSX.Element} The rendered Shortcut Trainer app interface.
+ * It uses the `useState` to manage the current view, operating system, and selected app.
+ * @returns {JSX.Element} The rendered interface.
  */
 
 function App() {
